@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class FactoriaMontaña implements FactoriaCarreraBicicleta {
     @Override
-    public Bicicleta crearBicicleta(int id) {
+    public Bicicleta crearBicicleta( int id ) {
         return new BicicletaMontaña(id);
     }
 

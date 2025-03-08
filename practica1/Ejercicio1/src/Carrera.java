@@ -16,7 +16,7 @@ public abstract class Carrera extends Thread{
     /**
      * Porcentaje de retiro
      */
-    private double porcentajeRetiro;
+    protected double porcentajeRetiro;
 
     /**
      * Constructor
@@ -27,4 +27,9 @@ public abstract class Carrera extends Thread{
 
 
     public abstract void iniciarCarrera();
+
+    @Override
+    public void run() {
+        iniciarCarrera();
+    }
 }

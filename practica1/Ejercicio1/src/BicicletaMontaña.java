@@ -5,6 +5,6 @@ public class BicicletaMontaña extends Bicicleta {
 
     @Override
     public void showString(){
-        System.out.println(" SOy una bicicleta de montaña con ID: "+id);
+        System.out.println(" Soy una bicicleta de montaña con ID: "+id);
     }
 }

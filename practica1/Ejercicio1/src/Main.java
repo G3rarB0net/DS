@@ -17,8 +17,8 @@ public class Main {
 
 
         //Creo las carreras
-        Carrera carreraMontaña= factoriaMontaña.crearCarrera(numBicicletas);
-        Carrera carreraCarretera = factoriaCarretera.crearCarrera(numBicicletas);
+        Carrera carreraMontaña= factoriaMontaña.crearCarrera(numBicicletas,0.2);
+        Carrera carreraCarretera = factoriaCarretera.crearCarrera(numBicicletas,0.1);
 
 
         //Añado las bicicletas a la carrera

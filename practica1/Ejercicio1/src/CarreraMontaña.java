@@ -3,16 +3,15 @@ import java.util.Random;
 
 public class CarreraMontaña extends Carrera {
 
-    public CarreraMontaña(int n) {
-        super(n);
-        this.porcentajeRetiro = 0.2;
+    public CarreraMontaña(int n, double porcentaje) {
+        super(n,porcentaje);
 
     }
 
 
     @Override
     public void iniciarCarrera() {
-        System.out.println("Comienza la carrera de Montaña");
+        System.out.println("Iniciando la carrera de Montaña");
 
         //Numero de bicicletas retiradas
         int numeroRetiradas = (int)(bicicletas.size() * porcentajeRetiro);
@@ -36,6 +35,9 @@ public class CarreraMontaña extends Carrera {
         //Mido la diferencia de tiempo, lo divido por 1000 porque es en milisegundos
         while((System.currentTimeMillis()-iniTime)/1000<DURACION) {
             try{
+                for (Bicicleta bici : bicicletas) {
+                    bici.showString();
+                }
 
                 Thread.sleep(intervaloTiempo);
 

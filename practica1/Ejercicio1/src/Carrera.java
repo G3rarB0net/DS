@@ -21,8 +21,9 @@ public abstract class Carrera extends Thread{
     /**
      * Constructor
      */
-    public Carrera(int n) {
+    public Carrera(int n, double porcentaje) {
         bicicletas = new ArrayList<>(n);
+        this.porcentajeRetiro = porcentaje;
     }
 
     public void addBicicleta(Bicicleta b) {

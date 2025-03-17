@@ -4,9 +4,8 @@ import java.util.Random;
 public class CarreraCarretera extends Carrera {
 
 
-    public CarreraCarretera(int n) {
-        super(n);
-        this.porcentajeRetiro = 0.1;
+    public CarreraCarretera(int n, double porcentaje) {
+        super(n, porcentaje);
     }
 
 
@@ -36,6 +35,9 @@ public class CarreraCarretera extends Carrera {
         //Mido la diferencia de tiempo, lo divido por 1000 porque es en milisegundos
         while((System.currentTimeMillis()-iniTime)/1000<DURACION) {
             try{
+                for(Bicicleta bici : bicicletas){
+                    bici.showString();
+                }
 
                 Thread.sleep(intervaloTiempo);
 

@@ -5,6 +5,6 @@ public class BicicletaCarretera extends Bicicleta{
 
     @Override
     public void showString(){
-        System.out.println(" Soy una bicicleta de carretera con ID: "+id);
+        System.out.println(" Bicicleta de carretera con ID: "+id);
     }
 }

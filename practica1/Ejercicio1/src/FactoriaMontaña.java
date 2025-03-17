@@ -7,7 +7,7 @@ public class FactoriaMontaña implements FactoriaCarreraBicicleta {
     }
 
     @Override
-    public CarreraMontaña crearCarrera(int n){
-        return new CarreraMontaña(n);
+    public CarreraMontaña crearCarrera(int n, double porcentaje){
+        return new CarreraMontaña(n, porcentaje);
     }
 }

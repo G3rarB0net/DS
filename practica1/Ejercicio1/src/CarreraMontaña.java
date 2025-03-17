@@ -3,9 +3,10 @@ import java.util.Random;
 
 public class CarreraMontaña extends Carrera {
 
-    public CarreraMontaña(ArrayList<Bicicleta> bicicletas) {
-        super(bicicletas);
+    public CarreraMontaña(int n) {
+        super(n);
         this.porcentajeRetiro = 0.2;
+
     }
 
 
@@ -15,7 +16,7 @@ public class CarreraMontaña extends Carrera {
 
         //Numero de bicicletas retiradas
         int numeroRetiradas = (int)(bicicletas.size() * porcentajeRetiro);
-        System.out.println("Numero de bicicletas a retirar "+numeroRetiradas);
+        System.out.println("Numero de bicicletas a retirar de la carrera de montaña: "+numeroRetiradas);
 
         //Contador de bicis retiradas
         int contadorRetiradas = 0;
@@ -28,9 +29,6 @@ public class CarreraMontaña extends Carrera {
             intervaloTiempo = 1000;
         }
 
-        for(int i =0; i < bicicletas.size(); i++){
-            System.out.println(bicicletas.get(i).getId());
-        }
 
         //Guardo el instante de inicio
         long iniTime = System.currentTimeMillis();
@@ -44,13 +42,13 @@ public class CarreraMontaña extends Carrera {
                 if(contadorRetiradas < numeroRetiradas && !bicicletas.isEmpty()){
                     Random rand = new Random();
                     int indice = rand.nextInt(bicicletas.size());
-                    System.out.println("Bicileta con el id " + bicicletas.get(indice).getId() + " se ha retirado");
+                    System.out.println("Bicileta con el id " + bicicletas.get(indice).getId() + " se ha retirado de la carrera de Montaña");
                     bicicletas.remove(indice);
                     contadorRetiradas++;
                 }
 
             }catch (InterruptedException e) {
-                System.out.println("La carrera fue interrumpida.");
+                System.out.println("La carrera de montaña fue interrumpida");
                 return;
             }
 

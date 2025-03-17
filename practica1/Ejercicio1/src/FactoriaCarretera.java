@@ -2,12 +2,12 @@ import java.util.ArrayList;
 
 public class FactoriaCarretera implements FactoriaCarreraBicicleta{
     @Override
-    public Bicicleta crearBicicleta(int id) {
+    public BicicletaCarretera crearBicicleta(int id) {
         return new BicicletaCarretera(id);
     }
 
     @Override
-    public Carrera crearCarrera(ArrayList<Bicicleta> bicicletas){
-        return new CarreraCarretera(bicicletas);
+    public CarreraCarretera crearCarrera(int n){
+        return new CarreraCarretera(n);
     }
 }

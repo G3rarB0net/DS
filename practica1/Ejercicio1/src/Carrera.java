@@ -21,8 +21,12 @@ public abstract class Carrera extends Thread{
     /**
      * Constructor
      */
-    public Carrera(ArrayList<Bicicleta> bicicletas) {
-        this.bicicletas = bicicletas;
+    public Carrera(int n) {
+        bicicletas = new ArrayList<>(n);
+    }
+
+    public void addBicicleta(Bicicleta b) {
+        bicicletas.add(b);
     }
 
 

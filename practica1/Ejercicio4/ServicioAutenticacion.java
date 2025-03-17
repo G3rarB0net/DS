@@ -1,0 +1,126 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+// Interfaz para los filtros
+interface Filtro {
+    boolean ejecutar(String dato);
+}
+
+// Filtro para validar el correo
+class FiltroCorreo implements Filtro {
+    @Override
+    public boolean ejecutar(String correo) {
+        if (correo == null || !correo.contains("@")) {
+            System.out.println("Correo inválido: falta '@'");
+            return false;
+        }
+
+        String[] partes = correo.split("@");
+        if (partes[0].isEmpty()) {
+            System.out.println("Correo inválido: falta texto antes de '@'");
+            return false;
+        }
+
+        if (partes.length != 2){
+            System.out.println("Correo inválido: falta texto después de '@'");
+            return false;
+        }
+        else{
+            String dominio = partes[1].toLowerCase();
+            if (!dominio.equals("gmail.com") && !dominio.equals("hotmail.com")) {
+                System.out.println("Correo inválido: dominio no permitido (solo gmail.com o hotmail.com)");
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+
+// Filtro 1 para la contraseña: longitud mínima de 8 caracteres
+class FiltroLongitud implements Filtro {
+    @Override
+    public boolean ejecutar(String contrasena) {
+        if (contrasena.length() < 8) {
+            System.out.println("Contraseña inválida: debe tener al menos 8 caracteres");
+            return false;
+        }
+        return true;
+    }
+}
+
+// Filtro 2 para la contraseña: debe contener al menos un número
+class FiltroNumero implements Filtro {
+    @Override
+    public boolean ejecutar(String contrasena) {
+        if (!contrasena.matches(".*\\d.*")) {  // . cualquier caracter; * cero o mas rep. del caracter anterior; \\d un digito numerico; 
+            System.out.println("Contraseña inválida: debe contener al menos un número"); // .* cualquier cantidad de caracteres antes o despues del digito
+            return false;
+        }
+        return true;
+    }
+}
+
+// Filtro 3 para la contraseña: debe contener al menos una letra mayúscula
+class FiltroMayuscula implements Filtro {
+    @Override
+    public boolean ejecutar(String contrasena) {
+        if (!contrasena.matches(".*[A-Z].*")) {  // .* cualquier cantidad de caracteres antes o despues; [A-Z] cualquier letra mayusucla
+            System.out.println("Contraseña inválida: debe contener al menos una letra mayúscula");  // .* cualquier cantidad de caracteres despues
+            return false;
+        }
+        return true;
+    }
+}
+
+// Clase que gestiona los filtros
+class GestorFiltros {
+    private final List<Filtro> filtros = new ArrayList<>();
+
+    public void agregarFiltro(Filtro filtro) {
+        filtros.add(filtro);
+    }
+
+    public boolean ejecutarFiltros(String dato) {
+        for (Filtro filtro : filtros) {
+            if (!filtro.ejecutar(dato)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+
+// Cliente que solicita la validación
+public class ServicioAutenticacion {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        GestorFiltros gestorCorreo = new GestorFiltros();
+        GestorFiltros gestorContrasena = new GestorFiltros();
+
+        // Agregar filtros
+        gestorCorreo.agregarFiltro(new FiltroCorreo());
+        gestorContrasena.agregarFiltro(new FiltroLongitud());
+        gestorContrasena.agregarFiltro(new FiltroNumero());
+        gestorContrasena.agregarFiltro(new FiltroMayuscula());
+
+        String correo;
+        String contrasena;
+
+        // Validar el correo antes de pedir la contraseña
+        do {
+            System.out.print("Ingrese su correo: ");
+            correo = scanner.nextLine();
+        } while (!gestorCorreo.ejecutarFiltros(correo));
+
+        // Validar la contraseña después de que el correo sea válido
+        do {
+            System.out.print("Ingrese su contraseña: ");
+            contrasena = scanner.nextLine();
+        } while (!gestorContrasena.ejecutarFiltros(contrasena));
+
+        System.out.println("Autenticación exitosa");
+        scanner.close();
+    }
+}

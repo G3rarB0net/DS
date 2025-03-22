@@ -1,18 +1,17 @@
 from abc import ABC, abstractmethod
 import requests
 
-#key 1; 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
-#key 2; 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
-#key 3; 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
+# Clase base que será la interfaz para todos los LLM
 class LLM(ABC):
     @abstractmethod
     def generate_summary(self, text, input_lang, output_lang, model):
         pass
 
+# Implementación básica del LLM
 class BasicLLM(LLM):
     def generate_summary(self, text, input_lang, output_lang, model):
         API_URL = f"https://api-inference.huggingface.co/models/{model}"
-        headers = {"Authorization": "Bearer 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"}
+        headers = {"Authorization": "Bearer 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"}
         
         payload = {
             "inputs": text,
@@ -30,4 +29,4 @@ class BasicLLM(LLM):
         try:
             return response.json()[0]['summary_text']
         except (KeyError, IndexError, requests.exceptions.JSONDecodeError):
-            raise Exception("Invalid JSON response")
+            raise Exception("Invalid json response")

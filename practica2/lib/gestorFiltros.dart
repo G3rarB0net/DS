@@ -1,6 +1,6 @@
 import 'package:tuple/tuple.dart';
 import 'cadenaFiltros.dart';
-import 'filtros.dart';
+import 'filtro.dart';
 
 class GestorFiltros {
   final CadenaFiltros _cadenaFiltros = CadenaFiltros();

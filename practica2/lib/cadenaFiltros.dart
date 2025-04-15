@@ -1,5 +1,5 @@
 
-import 'filtros.dart';
+import 'filtro.dart';
 import 'package:tuple/tuple.dart';
 
 class CadenaFiltros {

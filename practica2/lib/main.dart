@@ -1,6 +1,14 @@
 import 'package:flutter/material.dart';
 import 'gestorFiltros.dart';
-import 'filtros.dart';
+import 'filtroLongitud.dart';
+import 'filtroContieneLetra.dart';
+import 'filtroContieneNumero.dart';
+import 'filtroLetraMayuscula.dart';
+import 'filtroCaracterEspecial.dart';
+import 'filtroUsuario.dart';
+import 'filtroDominio.dart';
+import 'filtroTLD.dart';
+import 'filtroCampoVacio.dart';
 import 'package:tuple/tuple.dart';
 
 void main() {
@@ -42,8 +50,17 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _gestorCorreo.agregarFiltro(FiltroCorreo());
-    _gestorContrasena.agregarFiltro(FiltroContrasena());
+    _gestorCorreo.agregarFiltro(FiltroCampoVacio());
+    _gestorCorreo.agregarFiltro(FiltroUsuarioCorreo());
+    _gestorCorreo.agregarFiltro(FiltroDominioCorreo());
+    _gestorCorreo.agregarFiltro(FiltroTLDCorreo());
+
+    _gestorContrasena.agregarFiltro(FiltroCampoVacio());
+    _gestorContrasena.agregarFiltro(FiltroLongitudMinima());
+    _gestorContrasena.agregarFiltro(FiltroContieneLetra());
+    _gestorContrasena.agregarFiltro(FiltroContieneNumero());
+    _gestorContrasena.agregarFiltro(FiltroLetraMayuscula());
+    _gestorContrasena.agregarFiltro(FiltroCaracterEspecial());
   }
 
   void _validar() {
@@ -55,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     bool todoBien = resultadoCorreo.item1 && resultadoContrasena.item1;
 
-    String mensaje = "${resultadoCorreo.item2}\n${resultadoContrasena.item2}";
+    String mensaje = "Correo: ${resultadoCorreo.item2}\nContraseña: ${resultadoContrasena.item2}";
 
     final snackBar = SnackBar(
       content: Text(mensaje),

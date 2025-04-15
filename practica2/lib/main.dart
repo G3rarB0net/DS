@@ -9,6 +9,7 @@ import 'filtroUsuario.dart';
 import 'filtroDominio.dart';
 import 'filtroTLD.dart';
 import 'filtroCampoVacio.dart';
+import 'filtroCorreoYaRegistrado.dart';
 import 'package:tuple/tuple.dart';
 
 void main() {
@@ -44,17 +45,26 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+  final List<String> _correosRegistrados = [
+    'usuario@correo.com',
+    'admin@dominio.org',
+  ];
+
+
   final GestorFiltros _gestorCorreo = GestorFiltros();
   final GestorFiltros _gestorContrasena = GestorFiltros();
 
   @override
   void initState() {
     super.initState();
+    //Filtros para el correo
     _gestorCorreo.agregarFiltro(FiltroCampoVacio());
     _gestorCorreo.agregarFiltro(FiltroUsuarioCorreo());
     _gestorCorreo.agregarFiltro(FiltroDominioCorreo());
     _gestorCorreo.agregarFiltro(FiltroTLDCorreo());
+    _gestorCorreo.agregarFiltro(FiltroCorreoYaRegistrado(_correosRegistrados));
 
+    //Filtros para la contraseña
     _gestorContrasena.agregarFiltro(FiltroCampoVacio());
     _gestorContrasena.agregarFiltro(FiltroLongitudMinima());
     _gestorContrasena.agregarFiltro(FiltroContieneLetra());
@@ -71,8 +81,19 @@ class _MyHomePageState extends State<MyHomePage> {
     Tuple2<bool, String> resultadoContrasena = _gestorContrasena.ejecutarCadena(contrasena);
 
     bool todoBien = resultadoCorreo.item1 && resultadoContrasena.item1;
+    String mensaje;
+    if (todoBien) {
+      setState(() {
+        _correosRegistrados.add(correo);
+      });
+      mensaje = "Registro exitoso";
+      _emailController.clear();
+      _passwordController.clear();
+    } else {
+      mensaje = "Correo: ${resultadoCorreo.item2}\nContraseña: ${resultadoContrasena.item2}";
+    }
 
-    String mensaje = "Correo: ${resultadoCorreo.item2}\nContraseña: ${resultadoContrasena.item2}";
+
 
     final snackBar = SnackBar(
       content: Text(mensaje),
@@ -107,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(height: 24),
             ElevatedButton(
               onPressed: _validar,
-              child: const Text('Validar'),
+              child: const Text('Registrar'),
             ),
           ],
         ),

@@ -6,17 +6,17 @@ class Account {
 
   void deposit(double amount) {
     if (amount <= 0) {
-      throw ArgumentError("Deposit amount must be positive");
+      throw ArgumentError("El monto del depósito debe ser positivo");
     }
     _balance += amount;
   }
 
   void withdraw(double amount) {
     if (amount <= 0) {
-      throw ArgumentError("Withdrawal amount must be positive");
+      throw ArgumentError("El monto del retiro debe ser positivo y mayor de 0");
     }
     if (_balance < amount) {
-      throw StateError("Insufficient funds");
+      throw StateError("El saldo es insuficiente para retirar $amount");
     }
     _balance -= amount;
   }

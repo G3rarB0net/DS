@@ -47,7 +47,7 @@ class BankService {
   Account _getAccount(String number) {
     final account = _accounts[number];
     if (account == null) {
-      throw ArgumentError('Account not found: $number');
+      throw ArgumentError('Cuenta no encontrada: $number');
     }
     return account;
   }

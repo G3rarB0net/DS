@@ -40,6 +40,33 @@ class _BankHomePageState extends State<BankHomePage> {
     });
   }
 
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.red[50],
+        title: const Text(
+          'Error',
+          style: TextStyle(color: Colors.red),
+        ),
+        content: Text(
+          message,
+          style: const TextStyle(color: Colors.redAccent),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'OK',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
   void _showTransactionDialog(String type) {
     final controller = TextEditingController();
     showDialog(
@@ -57,15 +84,23 @@ class _BankHomePageState extends State<BankHomePage> {
             ElevatedButton(
               onPressed: () {
                 final amount = double.tryParse(controller.text) ?? 0;
-                if (_selectedAccount != null && amount > 0) {
-                  setState(() {
-                    if (type == 'Depositar') {
-                      _bankService.deposit(_selectedAccount!, amount);
-                    } else {
-                      _bankService.withdrawal(_selectedAccount!, amount);
-                    }
-                  });
-                  Navigator.pop(context);
+                if (_selectedAccount != null) {
+                  try {
+                    setState(() {
+                      if (type == 'Depositar') {
+                        _bankService.deposit(_selectedAccount!, amount);
+                      } else {
+                        _bankService.withdrawal(_selectedAccount!, amount);
+                      }
+                    });
+                    Navigator.pop(context);
+                  } on ArgumentError catch (e) {
+                    _showErrorDialog(e.message.toString());
+                  } on StateError catch (e) {
+                    _showErrorDialog(e.message.toString());
+                  } catch (e) {
+                    _showErrorDialog('Ocurrió un error inesperado: $e');
+                  }
                 }
               },
               child: const Text('Aceptar'),
@@ -117,6 +152,7 @@ class _BankHomePageState extends State<BankHomePage> {
                 final amount = double.tryParse(controller.text) ?? 0;
                 if (_selectedAccount != null && toAccount != null && amount > 0) {
                   setState(() {
+                    //Comprobar que la cuenta tiene saldo suficiente====================================================
                     _bankService.transfer(_selectedAccount!, toAccount!, amount);
                   });
                   Navigator.pop(context);

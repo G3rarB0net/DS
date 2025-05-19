@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  descripcion: MyString
+  completada: false
+  usuario: MyString
+  tarea_padre_id: 1
+
+two:
+  descripcion: MyString
+  completada: false
+  usuario: MyString
+  tarea_padre_id: 1

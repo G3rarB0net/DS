@@ -1,64 +1,120 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/post.dart';
 import '../repository/social_repository.dart';
-import '../notifiers/post_notifier.dart';
+import 'package:frontend/task/tarea.dart';
 
-class FeedScreen extends StatelessWidget {
-  final int userId;
-  FeedScreen({super.key, required this.userId});
+import '../task/GestorDeTareas.dart';
+import '../task/tareaSimple.dart';
 
-  final titleController = TextEditingController();
-  final bodyController = TextEditingController();
+class FeedScreen extends StatefulWidget {
+  @override
+  _TaskManagerState createState() => _TaskManagerState();
+}
+
+class _TaskManagerState extends State<FeedScreen> {
+  final TextEditingController _controller = TextEditingController();
+  final GestorDeTareas _gestorDeTareas = GestorDeTareas();
+  String currentUser = "Alberto";
+
+  @override
+  void initState() {
+    super.initState();
+    _cargarTareasIniciales();
+  }
+
+  void _cargarTareasIniciales() async {
+    try {
+      await _gestorDeTareas.cargarTareas(currentUser);
+      setState(() {});
+    } catch (e) {
+      print("Error loading tasks: $e");
+    }
+  }
+
+
+  void _addTask() async {
+    final text = _controller.text;
+    if (text.isNotEmpty) {
+      try {
+        await _gestorDeTareas.agregarTarea(TareaSimple(id: null, descripcion: text, completada: false, usuario: currentUser, tareaPadreId: null));
+        _controller.clear();
+      } catch (e) {
+        print("Error adding task: $e");
+      }
+      setState(() {});
+    }
+  }
+
+  void _markTaskCompleted(Tarea tarea) async {
+    try {
+      await _gestorDeTareas.marcarCompletada(tarea);
+    } catch (e) {
+      print("Error marking task completed: $e");
+    }
+    setState(() {});
+  }
+
+  void _deleteTask(Tarea tarea) async {
+    try {
+      await _gestorDeTareas.eliminarTarea(tarea);
+    } catch (e) {
+      print("Error deleting task: $e");
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
-    final notifier = Provider.of<PostNotifier>(context);
     return Scaffold(
-      appBar: AppBar(title: const Text('Feed')),
-      body: RefreshIndicator(
-        onRefresh: () => notifier.loadPosts(),
-        child: Consumer<PostNotifier>(
-          builder: (context, state, _) => ListView.builder(
-            itemCount: state.posts.length,
-            itemBuilder: (context, i) {
-              final post = state.posts[i];
-              return ListTile(
-                title: Text(post.title),
-                subtitle: Text(post.body),
-              );
-            },
+      appBar: AppBar(
+        title: Text('Task Manager'),
+      ),
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Enter new task',
+                suffixIcon: IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: _addTask,
+                ),
+              ),
+            ),
           ),
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showDialog(context, notifier),
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-
-  void _showDialog(BuildContext context, PostNotifier notifier) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Create Post'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(controller: titleController, decoration: const InputDecoration(labelText: 'Title')),
-            TextField(controller: bodyController, decoration: const InputDecoration(labelText: 'Body')),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () async {
-              final post = Post(title: titleController.text, body: bodyController.text);
-              await notifier.addPost(post, userId);
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("🔔 Post created!")));
-            },
-            child: const Text('Submit'),
+          Expanded(
+            child: ListView.builder(
+              itemCount: _gestorDeTareas.tareas.length,
+              itemBuilder: (context, index) {
+                final tarea = _gestorDeTareas.tareas[index];
+                return ListTile(
+                  title: Text(
+                    tarea.descripcion ?? "No description",
+                    style: TextStyle(
+                      decoration: tarea.completada ?? false ? TextDecoration.lineThrough : TextDecoration.none,
+                    ),
+                  ),
+                  trailing: Wrap(
+                    spacing: 12,
+                    children: <Widget>[
+                      IconButton(
+                        icon: Icon(Icons.check),
+                        onPressed: () => _markTaskCompleted(tarea),
+                        color: tarea.completada ?? false ? Colors.green : null,
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () => _deleteTask(tarea),
+                        color: Colors.red,
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),

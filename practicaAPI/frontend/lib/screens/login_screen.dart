@@ -32,7 +32,7 @@ class LoginScreen extends StatelessWidget {
 
               final user = User(email: email, password: password);
               await repository.createUser(user);
-              Navigator.push(context, MaterialPageRoute(builder: (_) => FeedScreen(userId: 1)));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => FeedScreen()));
             },
             child: const Text('Create Account'),
           )

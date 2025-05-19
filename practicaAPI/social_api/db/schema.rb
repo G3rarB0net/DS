@@ -10,11 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_16_100432) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_19_120114) do
   create_table "posts", force: :cascade do |t|
     t.string "title"
     t.text "body"
     t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "tareas", force: :cascade do |t|
+    t.string "descripcion"
+    t.boolean "completada"
+    t.string "usuario"
+    t.integer "tarea_padre_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

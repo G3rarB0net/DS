@@ -7,6 +7,9 @@ import '../task/GestorDeTareas.dart';
 import '../task/tareaSimple.dart';
 
 class FeedScreen extends StatefulWidget {
+  final String currentUser;
+
+  FeedScreen({required this.currentUser});
   @override
   _TaskManagerState createState() => _TaskManagerState();
 }
@@ -14,7 +17,7 @@ class FeedScreen extends StatefulWidget {
 class _TaskManagerState extends State<FeedScreen> {
   final TextEditingController _controller = TextEditingController();
   final GestorDeTareas _gestorDeTareas = GestorDeTareas();
-  String currentUser = "Alberto";
+
 
   @override
   void initState() {
@@ -24,7 +27,7 @@ class _TaskManagerState extends State<FeedScreen> {
 
   void _cargarTareasIniciales() async {
     try {
-      await _gestorDeTareas.cargarTareas(currentUser);
+      await _gestorDeTareas.cargarTareas(widget.currentUser);
       setState(() {});
     } catch (e) {
       print("Error loading tasks: $e");
@@ -36,7 +39,7 @@ class _TaskManagerState extends State<FeedScreen> {
     final text = _controller.text;
     if (text.isNotEmpty) {
       try {
-        await _gestorDeTareas.agregarTarea(TareaSimple(id: null, descripcion: text, completada: false, usuario: currentUser, tareaPadreId: null));
+        await _gestorDeTareas.agregarTarea(TareaSimple(id: null, descripcion: text, completada: false, usuario: widget.currentUser, tareaPadreId: null));
         _controller.clear();
       } catch (e) {
         print("Error adding task: $e");

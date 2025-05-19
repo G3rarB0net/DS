@@ -1,13 +1,18 @@
 class TareasController < ApplicationController
   
-  def index
-    @tareas = Tarea.where(tarea_padre_id: nil)
-    render json: @tareas.as_json(include: :subtareas)
+ def index
+    if params[:usuario].present?
+      @tareas = Tarea.where(usuario: params[:usuario])
+    else
+      @tareas = Tarea.all
+    end
+    
+    render json: @tareas
   end
 
   
   def show
-    render json: @tarea.as_json(include: :subtareas)
+    render json: @tarea.as_json
   end
 
   

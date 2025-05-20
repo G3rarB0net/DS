@@ -6,5 +6,5 @@ abstract class Filter {
     return nextFilter;
   }
 
-  bool check(String email, String password);
+  String? check(String email, String password);
 }

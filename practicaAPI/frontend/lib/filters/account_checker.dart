@@ -1,7 +1,7 @@
 import 'email_filter.dart';
 import 'password_filter.dart';
 
-bool validateUser(String email, String password) {
+String? validateUser(String email, String password) {
   final emailFilter = EmailFilter();
   final passwordFilter = PasswordFilter();
 

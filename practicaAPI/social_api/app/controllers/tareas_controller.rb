@@ -1,5 +1,6 @@
 class TareasController < ApplicationController
-  
+  before_action :set_tarea, only: [:show, :update, :destroy]
+
  def index
     if params[:usuario].present?
       @tareas = Tarea.where(usuario: params[:usuario])
@@ -27,6 +28,7 @@ class TareasController < ApplicationController
 
  
   def update
+   
     if @tarea.update(tarea_params)
       render json: @tarea
     else
@@ -35,8 +37,12 @@ class TareasController < ApplicationController
   end
 
   def destroy
-    @tarea.destroy
-    head :no_content
+    
+    if @tarea.destroy
+      head :ok
+    else
+      render json: { error: "No se pudo eliminar" }, status: :unprocessable_entity
+    end
   end
 
   private

@@ -17,7 +17,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Social App',
-      home: LoginScreen(),
+      home: LoginScreen()
+      //home: FeedScreen(currentUser: 'user1@gmail.com'),
     );
   }
 }

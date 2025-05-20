@@ -38,6 +38,12 @@ class GestorDeTareas {
 
     if (response.statusCode == 200) {
       tareas.removeWhere((t) => t.id == tarea.id);
+      //se buscan las taeas con idPadre = id de la tarea actual y de manera recursiva se eliminan
+      List<Tarea> subtareas = tareas.where((t) => t.tareaPadreId == tarea.id).toList();
+      for (var sub in subtareas) {
+        // Eliminar cada subtarea de manera recursiva
+        await eliminarTarea(sub);
+      }
     } else {
       throw Exception('Error al eliminar tarea');
     }
@@ -55,6 +61,13 @@ class GestorDeTareas {
 
     if (response.statusCode == 200) {
       tarea.completada = nuevoEstado;
+
+      //Se buscan las tareas con idPadre = id de la tareac actual y de manera recursiva se marcan como completadas
+      List<Tarea> subtareas = tareas.where((t) => t.tareaPadreId == tarea.id).toList();
+      for (var sub in subtareas) {
+        // Marcar cada subtarea con el nuevo estado (recursivo)
+        await marcarCompletada(sub);
+      }
     } else {
       throw Exception('Error al marcar tarea como completada');
     }

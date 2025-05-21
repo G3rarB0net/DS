@@ -10,7 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_19_120114) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_21_090813) do
+  create_table "amistads", force: :cascade do |t|
+    t.string "usuario"
+    t.string "amistadCon"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "posts", force: :cascade do |t|
     t.string "title"
     t.text "body"

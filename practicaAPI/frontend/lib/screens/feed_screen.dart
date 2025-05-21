@@ -6,6 +6,7 @@ import 'package:frontend/task/tarea.dart';
 import '../task/GestorDeTareas.dart';
 import '../task/tareaSimple.dart';
 import 'home_screen.dart';
+import 'friendship_screen.dart';
 
 class FeedScreen extends StatefulWidget {
   final String currentUser;
@@ -180,10 +181,6 @@ class _TaskManagerState extends State<FeedScreen> {
     }
   }
 
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -191,12 +188,19 @@ class _TaskManagerState extends State<FeedScreen> {
         title: Text('Task Manager'),
         actions: [
           IconButton(
+            icon: Icon(Icons.people),
+            tooltip: 'Amistades',
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => FriendshipScreen(currentUser: widget.currentUser)),
+              );
+            },
+          ),
+          IconButton(
             icon: Icon(Icons.logout),
             tooltip: 'Cerrar sesión',
             onPressed: () {
-              // Opcional: Aquí puedes limpiar datos de sesión si tienes
-
-              // Navegar a LoginScreen y eliminar la pila para que no se pueda volver atrás
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (_) => const HomeScreen()),

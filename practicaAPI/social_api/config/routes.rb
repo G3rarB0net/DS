@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   resources :tareas, only: [:index, :create, :update, :destroy]
   resources :users, only: [:index, :create, :update, :destroy]
+  resources :amistades, only: [:index, :create, :update, :destroy]
 
   # Ruta personalizada para buscar usuario por email
   get 'users/get_by_email', to: 'users#getUserByEmail'

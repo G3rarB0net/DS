@@ -136,7 +136,7 @@ class _FriendshipManagerState extends State<FriendshipScreen> {
                     final amigo = _controller.text;
 
                     final existeAmigo = await repository.userExists(amigo);
-                    if(!existeAmigo){
+                    if(!existeAmigo || amigo == widget.currentUser){
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('Correo no existente')),
                       );

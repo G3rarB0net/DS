@@ -4,7 +4,7 @@ class TareaCompuesta implements Tarea {
   @override final int? id;
   @override final String descripcion;
   bool _completada;
-  @override final String usuario;
+  @override final List<String> usuarios;
   @override final int? tareaPadreId;
 
   final List<Tarea> _subtareas;
@@ -13,7 +13,7 @@ class TareaCompuesta implements Tarea {
     required this.id,
     required this.descripcion,
     required bool completada,
-    required this.usuario,
+    required this.usuarios,
     this.tareaPadreId,
     List<Tarea>? subtareas,
   }) : _completada = completada,
@@ -39,7 +39,7 @@ class TareaCompuesta implements Tarea {
 
   @override
   void mostrar() {
-    print("+ $descripcion");
+    print("+ $descripcion (Usuarios: ${usuarios.join(', ')})");
     for (var sub in _subtareas) {
       sub.mostrar();
     }
@@ -49,11 +49,19 @@ class TareaCompuesta implements Tarea {
   List<Tarea> getSubcomponentes() => _subtareas;
 
   factory TareaCompuesta.fromJson(Map<String, dynamic> json) {
+    List<String> usuariosList = [];
+
+    if (json['users'] != null) {
+      usuariosList = (json['users'] as List)
+          .map((usuario) => usuario['email'] as String)
+          .toList();
+    }
+
     return TareaCompuesta(
       id: json['id'],
       descripcion: json['descripcion'],
       completada: json['completada'],
-      usuario: json['usuario'],
+      usuarios:usuariosList,
       tareaPadreId: json['tarea_padre_id'],
       subtareas: (json['subtareas'] as List<dynamic>?)
           ?.map((e) => Tarea.fromJson(e))
@@ -71,7 +79,7 @@ class TareaCompuesta implements Tarea {
       if (id != null) 'id': id,
       'descripcion': descripcion,
       'completada': completada,
-      'usuario': usuario,
+      'users': usuarios,
       'tarea_padre_id': tareaPadreId,
       'subtareas': _subtareas.map((e) => e.toJson()).toList(),
     };

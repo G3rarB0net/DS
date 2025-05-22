@@ -10,12 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_21_090813) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_21_140252) do
   create_table "amistads", force: :cascade do |t|
     t.string "usuario"
     t.string "amistadCon"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "asignacion_tareas", force: :cascade do |t|
+    t.integer "user_id", null: false
+    t.integer "tarea_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tarea_id"], name: "index_asignacion_tareas_on_tarea_id"
+    t.index ["user_id"], name: "index_asignacion_tareas_on_user_id"
   end
 
   create_table "posts", force: :cascade do |t|
@@ -29,7 +38,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_090813) do
   create_table "tareas", force: :cascade do |t|
     t.string "descripcion"
     t.boolean "completada"
-    t.string "usuario"
     t.integer "tarea_padre_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -41,4 +49,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_21_090813) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
+
+  add_foreign_key "asignacion_tareas", "tareas"
+  add_foreign_key "asignacion_tareas", "users"
 end

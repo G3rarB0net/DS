@@ -5,8 +5,9 @@ abstract class Tarea {
   int? get id;
   String get descripcion;
   bool get completada;
-  String get usuario;
+  List<String> get usuarios;
   int? get tareaPadreId;
+
 
   void mostrar();
   void set completada(bool value);

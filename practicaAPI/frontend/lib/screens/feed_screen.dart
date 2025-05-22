@@ -5,6 +5,8 @@ import 'package:frontend/task/tarea.dart';
 
 import '../task/GestorDeTareas.dart';
 import '../task/tareaSimple.dart';
+import 'package:frontend/friend/GestorDeAmistades.dart';
+import 'package:frontend/friend/amistad.dart';
 import 'home_screen.dart';
 import 'friendship_screen.dart';
 
@@ -43,13 +45,22 @@ class _TaskWidgetState extends State<TaskWidget> {
       .toList();
 
   void _addSubtask() async {
+    List<String> eliminaresto = [];
     final texto = _subtaskController.text;
     if (texto.isNotEmpty && widget.tarea.id != null) {
+      List<String>usuarios = widget.tarea.usuarios ?? [];
+      print(usuarios);
+      print(widget.tarea.usuarios);
+      final usuariosParaTarea = <String>{
+        widget.currentUser,
+        ...usuarios,
+      }.toList();
+
       await widget.gestor.agregarTarea(TareaSimple(
         id: null,
         descripcion: texto,
         completada: false,
-        usuario: widget.currentUser,
+        usuarios: usuariosParaTarea,
         tareaPadreId: widget.tarea.id,
       ));
       _subtaskController.clear();
@@ -150,12 +161,76 @@ class _TaskWidgetState extends State<TaskWidget> {
 class _TaskManagerState extends State<FeedScreen> {
   final TextEditingController _controller = TextEditingController();
   final GestorDeTareas _gestorDeTareas = GestorDeTareas();
+  final GestorDeAmistades _gestordeamistades = GestorDeAmistades();
+
+  List<String> colaboradoresSeleccionados = [];
+
+  void _mostrarPopupSeleccionAmigos() async {
+    List<String> seleccionTemp = List.from(colaboradoresSeleccionados);
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Seleccionar colaboradores'),
+          content: StatefulBuilder(
+            builder: (BuildContext context, StateSetter setDialogState) {
+              return SingleChildScrollView(
+                child: ListBody(
+                  children: _gestordeamistades.amistades.map((amigo) {
+                    return CheckboxListTile(
+                      title: Text(amigo.amistadCon),
+                      value: seleccionTemp.contains(amigo.amistadCon),
+                      onChanged: (bool? seleccionado) {
+                        setDialogState(() {
+                          if (seleccionado == true) {
+                            seleccionTemp.add(amigo.amistadCon);
+                          } else {
+                            seleccionTemp.remove(amigo.amistadCon);
+                          }
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('Cancelar'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  colaboradoresSeleccionados = List.from(seleccionTemp);
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text('Aceptar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
 
   @override
   void initState() {
     super.initState();
     _cargarTareasIniciales();
+    _cargarAmistadesIniciales();
+  }
+
+  void _cargarAmistadesIniciales() async {
+    try {
+      await _gestordeamistades.cargarAmistades(widget.currentUser);
+      setState(() {});
+    } catch (e) {
+      print("Error loading friendships: $e");
+    }
   }
 
   void _cargarTareasIniciales() async {
@@ -171,8 +246,20 @@ class _TaskManagerState extends State<FeedScreen> {
   void _addTask() async {
     final text = _controller.text;
     if (text.isNotEmpty) {
+      final usuariosParaTarea = <String>{
+        widget.currentUser,
+        ...colaboradoresSeleccionados,
+      }.toList();
       try {
-        await _gestorDeTareas.agregarTarea(TareaSimple(id: null, descripcion: text, completada: false, usuario: widget.currentUser, tareaPadreId: null));
+        await _gestorDeTareas.agregarTarea(
+            TareaSimple(
+              id: null,
+              descripcion: text,
+              completada: false,
+              usuarios: usuariosParaTarea,
+              tareaPadreId: null
+            )
+        );
         _controller.clear();
       } catch (e) {
         print("Error adding task: $e");
@@ -213,16 +300,30 @@ class _TaskManagerState extends State<FeedScreen> {
         children: <Widget>[
           Padding(
             padding: EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _controller,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Enter new task',
-                suffixIcon: IconButton(
+            child: Column(
+              children: [
+                TextField(
+                  controller: _controller,
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Descripción nueva tarea',
+                  ),
+                ),
+                SizedBox(height: 10),
+
+                ElevatedButton(
+                  onPressed: _mostrarPopupSeleccionAmigos,
+                  child: Text('Seleccionar colaboradores (${colaboradoresSeleccionados.length})'),
+                ),
+
+
+                SizedBox(height: 10),
+                ElevatedButton.icon(
                   icon: Icon(Icons.add),
+                  label: Text('Crear tarea principal'),
                   onPressed: _addTask,
                 ),
-              ),
+              ],
             ),
           ),
           Expanded(

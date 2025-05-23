@@ -6,21 +6,21 @@ void main() {
   group('SocialRepository', () {
     final repo = SocialRepository();
 
-    test('register user', () {
+    test('register user', () { // Tiene que estar corriendo el backend
       final user = User( email: 'user@gmail.com', password: 'Password123');
       repo.createUser(user);
       final result = repo.userExists('user@gmail.com');
       expect(result, true);
     });
 
-    test('login user', () {
+    test('login user', () { // Tiene que estar corriendo el backend
       final user = User (email: 'login@gmail.com', password: 'Loginpass5');
       repo.createUser(user);
       final loginSuccess = repo.loginUser('login@example.com', 'Loginpass5');
       expect(loginSuccess, true);
     });
 
-    test('login fails with incorrect password', () {
+    test('login falla con contraseña incorrecta', () { // Tiene que estar corriendo el backend
       final user = User( email: 'fail@gmail.com', password: 'Rightpass5');
       repo.createUser(user);
       final loginFail = repo.loginUser('fail@gmail.com', 'Wrongpass5');

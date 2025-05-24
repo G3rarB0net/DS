@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'login_screen.dart';
-import 'register_screen.dart';
+import 'pantallaLogin.dart';
+import 'pantallaRegistro.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class PantallaInicial extends StatelessWidget {
+  const PantallaInicial({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +45,7 @@ class HomeScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const LoginScreen()),
+                      MaterialPageRoute(builder: (_) => const PantallaLogin()),
                     );
                   },
                   style: ElevatedButton.styleFrom(
@@ -65,7 +65,7 @@ class HomeScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (_) => const RegisterScreen()),
+                      MaterialPageRoute(builder: (_) => const PantallaRegistro()),
                     );
                   },
                   style: OutlinedButton.styleFrom(

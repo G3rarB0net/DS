@@ -1,27 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:frontend/friend/GestorDeAmistades.dart';
 import 'package:frontend/friend/amistad.dart';
-import '../models/user.dart';
 import '../repository/social_repository.dart';
-import '../filters/account_checker.dart';
-import 'feed_screen.dart';
-import 'home_screen.dart';
+import 'pantallaPrincipal.dart';
+import 'pantallaInicial.dart';
 
-class FriendshipScreen extends StatefulWidget {
+class PantallaAmigos extends StatefulWidget {
   final String currentUser;
 
-  FriendshipScreen({required this.currentUser});
+  PantallaAmigos({required this.currentUser});
   @override
-  _FriendshipManagerState createState() => _FriendshipManagerState();
+  _PantallaAmigosState createState() => _PantallaAmigosState();
 }
 
-class FriendshipWidget extends StatefulWidget {
+class WidgetMostrarAmigo extends StatefulWidget {
   final Amistad amistad;
   final GestorDeAmistades gestor;
   final String currentUser;
   final Function() onUpdate;
 
-  FriendshipWidget({
+  WidgetMostrarAmigo({
     required this.amistad,
     required this.gestor,
     required this.currentUser,
@@ -29,10 +27,10 @@ class FriendshipWidget extends StatefulWidget {
   });
 
   @override
-  _FriendshipWidgetState createState() => _FriendshipWidgetState();
+  _WidgetMostrarAmigoState createState() => _WidgetMostrarAmigoState();
 }
 
-class _FriendshipWidgetState extends State<FriendshipWidget> {
+class _WidgetMostrarAmigoState extends State<WidgetMostrarAmigo> {
   void _deleteFriendship() async {
     try {
       await widget.gestor.eliminarAmistad(widget.amistad);
@@ -60,7 +58,7 @@ class _FriendshipWidgetState extends State<FriendshipWidget> {
   }
 }
 
-class _FriendshipManagerState extends State<FriendshipScreen> {
+class _PantallaAmigosState extends State<PantallaAmigos> {
   final TextEditingController _controller = TextEditingController();
   final GestorDeAmistades _gestordeamistades = GestorDeAmistades();
   final SocialRepository repository = SocialRepository();
@@ -97,7 +95,7 @@ class _FriendshipManagerState extends State<FriendshipScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Friendships Manager'),
+        title: Text('Gestor de Amigos'),
         actions: [
           IconButton(
             icon: Icon(Icons.task),
@@ -105,7 +103,7 @@ class _FriendshipManagerState extends State<FriendshipScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => FeedScreen(currentUser: widget.currentUser)),
+                MaterialPageRoute(builder: (_) => PantallaPrincipal(currentUser: widget.currentUser)),
               );
             },
           ),
@@ -115,7 +113,7 @@ class _FriendshipManagerState extends State<FriendshipScreen> {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => const HomeScreen()),
+                MaterialPageRoute(builder: (_) => const PantallaInicial()),
               );
             },
           ),
@@ -153,7 +151,7 @@ class _FriendshipManagerState extends State<FriendshipScreen> {
             child: ListView(
               children: _gestordeamistades.amistades
                   .map((amistad) => Card(
-                child: FriendshipWidget(
+                child: WidgetMostrarAmigo(
                   amistad: amistad,
                   gestor: _gestordeamistades,
                   currentUser: widget.currentUser,

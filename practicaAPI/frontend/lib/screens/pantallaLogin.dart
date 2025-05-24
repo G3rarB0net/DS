@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import '../models/user.dart';
 import '../repository/social_repository.dart';
 import '../filters/account_checker.dart';
-import 'feed_screen.dart';
+import 'pantallaPrincipal.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class PantallaLogin extends StatefulWidget {
+  const PantallaLogin({super.key});
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<PantallaLogin> createState() => _PantallaLoginState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _PantallaLoginState extends State<PantallaLogin> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   final SocialRepository repository = SocialRepository();
@@ -21,7 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Crear cuenta')),
+      appBar: AppBar(title: const Text('Iniciar sesión')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(children: [
@@ -49,26 +49,31 @@ class _RegisterScreenState extends State<RegisterScreen> {
               final email = _email.text;
               final password = _password.text;
 
-              final error = validateUser(email, password);
+              final exists = await repository.userExists(email);
+              if (!exists) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Este correo no existe.')),
+                );
+                return;
+              }
 
+              final error = validateUser(email, password);
               if (error != null) {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
                 return;
               }
 
-              final exists = await repository.userExists(email);
-              if (exists) {
+              final login = await repository.loginUser(email, password);
+              if(!login){
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Este correo ya está registrado.')),
+                  const SnackBar(content: Text('Credenciales introducidos incorrectos.')),
                 );
                 return;
               }
 
-              final user = User(email: email, password: password);
-              await repository.createUser(user);
-              Navigator.push(context, MaterialPageRoute(builder: (_) => FeedScreen(currentUser: email)));
+              Navigator.push(context, MaterialPageRoute(builder: (_) => PantallaPrincipal(currentUser: email)));
             },
-            child: const Text('Crear cuenta'),
+            child: const Text('Iniciar sesión'),
           )
         ]),
       ),

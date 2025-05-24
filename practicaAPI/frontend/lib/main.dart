@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:frontend/screens/feed_screen.dart';
+import 'package:frontend/screens/pantallaPrincipal.dart';
 import 'package:provider/provider.dart';
-import 'screens/login_screen.dart';
-import 'screens/home_screen.dart';
+import 'screens/pantallaLogin.dart';
+import 'screens/pantallaInicial.dart';
 import 'repository/social_repository.dart';
 
 void main() {
@@ -18,9 +18,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Social App',
-      home: HomeScreen()
-      //home: FeedScreen(currentUser: 'user1@gmail.com'),
+        title: 'Gestor de tareas',
+        home: PantallaInicial()
+      //home: PantallaPrincipal(currentUser: 'user1@gmail.com'),
     );
   }
 }

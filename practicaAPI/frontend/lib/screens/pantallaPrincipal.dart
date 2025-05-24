@@ -1,31 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../repository/social_repository.dart';
 import 'package:frontend/task/tarea.dart';
-
 import '../task/GestorDeTareas.dart';
 import '../task/tareaSimple.dart';
 import 'package:frontend/friend/GestorDeAmistades.dart';
-import 'package:frontend/friend/amistad.dart';
-import 'home_screen.dart';
-import 'friendship_screen.dart';
+import 'pantallaInicial.dart';
+import 'pantallaAmigos.dart';
 
-class FeedScreen extends StatefulWidget {
+class PantallaPrincipal extends StatefulWidget {
   final String currentUser;
 
-  FeedScreen({required this.currentUser});
+  PantallaPrincipal({required this.currentUser});
   @override
-  _TaskManagerState createState() => _TaskManagerState();
+  _PantallaPrincipalState createState() => _PantallaPrincipalState();
 }
 
 
-class TaskWidget extends StatefulWidget {
+class WidgetMostrarTarea extends StatefulWidget {
   final Tarea tarea;
   final GestorDeTareas gestor;
   final String currentUser;
   final Function() onUpdate;
 
-  TaskWidget({
+  WidgetMostrarTarea({
     required this.tarea,
     required this.gestor,
     required this.currentUser,
@@ -33,10 +29,10 @@ class TaskWidget extends StatefulWidget {
   });
 
   @override
-  _TaskWidgetState createState() => _TaskWidgetState();
+  _WidgetMostrarTareaState createState() => _WidgetMostrarTareaState();
 }
 
-class _TaskWidgetState extends State<TaskWidget> {
+class _WidgetMostrarTareaState extends State<WidgetMostrarTarea> {
   bool showSubtaskField = false;
   final TextEditingController _subtaskController = TextEditingController();
 
@@ -144,7 +140,7 @@ class _TaskWidgetState extends State<TaskWidget> {
                 ),
               ),
             // Recursivamente mostrar subtareas
-            ...subtareas.map((sub) => TaskWidget(
+            ...subtareas.map((sub) => WidgetMostrarTarea(
               tarea: sub,
               gestor: widget.gestor,
               currentUser: widget.currentUser,
@@ -158,7 +154,7 @@ class _TaskWidgetState extends State<TaskWidget> {
 }
 
 
-class _TaskManagerState extends State<FeedScreen> {
+class _PantallaPrincipalState extends State<PantallaPrincipal> {
   final TextEditingController _controller = TextEditingController();
   final GestorDeTareas _gestorDeTareas = GestorDeTareas();
   final GestorDeAmistades _gestordeamistades = GestorDeAmistades();
@@ -272,7 +268,7 @@ class _TaskManagerState extends State<FeedScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Task Manager'),
+        title: Text('Bienvenido ${widget.currentUser}'),
         actions: [
           IconButton(
             icon: Icon(Icons.people),
@@ -280,7 +276,7 @@ class _TaskManagerState extends State<FeedScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => FriendshipScreen(currentUser: widget.currentUser)),
+                MaterialPageRoute(builder: (_) => PantallaAmigos(currentUser: widget.currentUser)),
               );
             },
           ),
@@ -290,7 +286,7 @@ class _TaskManagerState extends State<FeedScreen> {
             onPressed: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (_) => const HomeScreen()),
+                MaterialPageRoute(builder: (_) => const PantallaInicial()),
               );
             },
           ),
@@ -331,7 +327,7 @@ class _TaskManagerState extends State<FeedScreen> {
               children: _gestorDeTareas.tareas
                   .where((t) => t.tareaPadreId == null)
                   .map((tarea) => Card(
-                child: TaskWidget(
+                child: WidgetMostrarTarea(
                   tarea: tarea,
                   gestor: _gestorDeTareas,
                   currentUser: widget.currentUser,
